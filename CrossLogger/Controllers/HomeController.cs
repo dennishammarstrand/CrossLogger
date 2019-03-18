@@ -5,13 +5,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CrossLogger.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace CrossLogger.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private UserManager<IdentityUser> _userManager;
+
+        public HomeController(UserManager<IdentityUser> userManager)
         {
+            _userManager = userManager;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var userID = await _userManager.GetUserAsync(HttpContext.User);
             return View();
         }
 
