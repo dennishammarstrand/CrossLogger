@@ -41,6 +41,11 @@ namespace CrossLogger
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddHttpClient("CrossLoggerAPI", c =>
+            {
+                c.BaseAddress = new Uri("https://localhost:44374/");
+                c.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
