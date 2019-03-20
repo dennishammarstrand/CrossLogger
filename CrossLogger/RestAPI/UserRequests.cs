@@ -1,4 +1,5 @@
 ﻿using CrossLogger.Models;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace CrossLogger.RestAPI
 {
     public class UserRequests
     {
-        public static async Task<string> Add(HttpClient client, User user)
+        public static async Task<string> Add(HttpClient client, IdentityUser user)
         {
             var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
             var httpResponse = await client.PostAsync($"api/user/newuser", content);

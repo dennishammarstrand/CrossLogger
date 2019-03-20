@@ -1,27 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using CrossLogger.RestAPI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrossLogger.Controllers
 {
+    [Authorize]
     public class RecordController : Controller
     {
-        // GET: Record
-        public ActionResult Index()
+        private UserManager<IdentityUser> _userManager;
+        private HttpClient client;
+
+        public RecordController(UserManager<IdentityUser> userManager, IHttpClientFactory httpClientFactory)
         {
+            _userManager = userManager;
+            client = httpClientFactory.CreateClient("CrossLoggerAPI");
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            var userID = await _userManager.GetUserAsync(HttpContext.User);
+            if (!await UserRequests.Exists(client, userID.Id))
+            {
+                string response = await UserRequests.Add(client, userID);
+            }
             return View();
         }
 
-        // GET: Record/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Record/Create
         public ActionResult Create()
         {
             return View();
